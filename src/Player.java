@@ -16,10 +16,12 @@ public class Player
     
     public Player(int id)
     {
-        //dotShapePawn    = new DotShapePawn(id);
-        lShapePawn      = new LShapePawn(id);
-    
-        lShapePawn.PrintAllConfigurations();
+        dotShapePawn    = new DotShapePawn(id);
+        //lShapePawn      = new LShapePawn(id);
+        
+        //lShapePawn.PrintAllConfigurations();
+        dotShapePawn.PrintAllConfigurations();
+        
         _id = id;
 
     }
@@ -83,14 +85,32 @@ abstract class Pawn
                 tmp[i][j] = boardToRotate[SMALL_BOARD_SIZE-j-1][i];
             }
         }
-        
-//            System.out.println("Conf = ");
-//            for ( int[] row : tmp ) 
-//            {
-//                System.out.println(Arrays.toString(row));
-//            }
-//            System.out.println();
-        
+        return tmp;
+    }
+    
+    public int[][] FlipHorizontal(int[][] boardToFlip)
+    {
+        int[][] tmp = new int[SMALL_BOARD_SIZE][SMALL_BOARD_SIZE];
+        for(int i = 0; i < SMALL_BOARD_SIZE; ++i)
+        {
+            for(int j = 0; j < SMALL_BOARD_SIZE; ++j)
+            {
+                tmp[SMALL_BOARD_SIZE-i-1][j] = boardToFlip[i][j];
+            }
+        }        
+        return tmp;
+    }
+    
+    public int[][] FlipVertical(int[][] boardToFlip)
+    {
+        int[][] tmp = new int[SMALL_BOARD_SIZE][SMALL_BOARD_SIZE];
+        for(int i = 0; i < SMALL_BOARD_SIZE; ++i)
+        {
+            for(int j = 0; j < SMALL_BOARD_SIZE; ++j)
+            {
+                tmp[i][SMALL_BOARD_SIZE-j-1] = boardToFlip[i][j];
+            }
+        }        
         return tmp;
     }
     
@@ -113,8 +133,11 @@ class DotShapePawn extends Pawn
     @Override
     public void InitPawnBoardAndRotatePosibilities(int id)
     {
+        // wprowadzenie początkowych danych, dot shape
         listOfPawnConfigurations.get(configurationInUse)[1][1] = id;
         
+        // tutaj nie potrzebne jest obrananie
+        // zatem nie m sensu generowac możliwych pozycji
         try
         {
             if(listOfPawnConfigurations.size() != 1)
@@ -137,6 +160,7 @@ class LShapePawn extends Pawn
     @Override
     public void InitPawnBoardAndRotatePosibilities(int id) 
     {
+        // wprowadzenie początkowych danych, L shape
         listOfPawnConfigurations.get(configurationInUse)[0][1]= id;
         listOfPawnConfigurations.get(configurationInUse)[1][1]= id;
         listOfPawnConfigurations.get(configurationInUse)[2][1]= id;
