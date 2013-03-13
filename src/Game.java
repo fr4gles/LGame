@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -11,7 +12,7 @@ public class Game
 {
 //  publiczne 
     public final static int BOARD_SIZE = 4;
-    public final static int PLAYERS_QUANTITY = 2;
+    public final static int PLAYERS_QUANTITY = 1;
     
 //  prywatne
     private int[][] board; // plansza
@@ -33,7 +34,7 @@ public class Game
         
         for(int i=0;i<PLAYERS_QUANTITY; ++i)
         {
-            _players.add(new Player(uniqueID.nextInt(1000/*Integer.MAX_VALUE*/)));
+            _players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)));
         }    
     }
     
@@ -41,9 +42,7 @@ public class Game
     {
         for( int[] i : board )
         {
-            for(int j : i)
-                System.out.print(j);
-            System.out.println();
+            System.out.println(Arrays.toString(i));
         }
     }
     
