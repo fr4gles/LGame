@@ -37,6 +37,10 @@ public class Player
 
 // 
 
+class Position
+{
+    public int x, y;
+}
 
 abstract class Pawn
 {
@@ -46,6 +50,8 @@ abstract class Pawn
     protected List<int[][]> listOfPawnConfigurations;
     protected int           configurationInUse;
     
+    protected Position      position;
+    
     public Pawn(int id)
     {
         listOfPawnConfigurations = new ArrayList<>();
@@ -53,8 +59,21 @@ abstract class Pawn
         
         configurationInUse = 0; // domyślna wartość to 0 
         _id = id;
+        
+        position =  new Position();
+        position.x = position.y = -1;   // początkowe przypisanie pozycji 
 
         InitRotateAndFlipPawnPosibilities(id);
+    }
+    
+    public void SetPosition(Position pos)
+    {
+        this.position = pos;
+    }
+    
+    public Position GetPosition()
+    {
+        return this.position;
     }
     
     public void PrintAllConfigurations()
@@ -131,7 +150,7 @@ abstract class Pawn
     
     public int GetAmoutOfRotatePosibilities()
     {
-        return listOfPawnConfigurations.size();
+        return this.listOfPawnConfigurations.size();
     }
     
     abstract public void InitRotateAndFlipPawnPosibilities(int id);

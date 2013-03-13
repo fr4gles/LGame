@@ -30,13 +30,7 @@ public class Game
         this.board = new int[BOARD_SIZE][BOARD_SIZE]; // wyzerowana na wejściu
         _players = new ArrayList<>();
         
-        Random uniqueID = new Random();
-        
-        for(int i=0;i<PLAYERS_QUANTITY; ++i)
-        {
-            // losowane jest UID od 1 do ...
-            _players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)+1));
-        }    
+        AddPlayers();
     }
     
     public void PrintBoard()
@@ -46,4 +40,16 @@ public class Game
             System.out.println(Arrays.toString(i));
         }
     }
+    
+    private void AddPlayers()
+    {
+        Random uniqueID = new Random();
+        for(int i=0;i<PLAYERS_QUANTITY; ++i)
+        {
+            // losowane jest UID od 1 do ...
+            _players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)+1));
+        }   
+    }
+    
+
 }
