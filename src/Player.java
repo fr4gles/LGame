@@ -14,7 +14,7 @@ public class Player
     public static final int NUMBER_OF_DOT_SHAPE_ROTATE_POSIBILITIES = 0;
     public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES = 0;
     
-    private Pawn lShapePawn, dotShapePawn;
+    public Pawn lShapePawn, dotShapePawn;
     final public int _id;
     
     public Player(int id)
@@ -22,11 +22,11 @@ public class Player
         dotShapePawn    = new DotShapePawn(id);
         lShapePawn      = new LShapePawn(id);
         
+        dotShapePawn.PrintAllConfigurations();
         lShapePawn.PrintAllConfigurations();
-        //dotShapePawn.PrintAllConfigurations();
+        
         
         _id = id;
-
     }
     
     public void go()
