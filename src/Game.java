@@ -1,7 +1,9 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
 
 /**
  *
@@ -17,7 +19,7 @@ public class Game
 //  prywatne
     private int[][] board; // plansza
     
-    private List<Player> _players;
+    private List<Player> players;
 
     public static void main(String[] args)
     {
@@ -28,9 +30,12 @@ public class Game
     public Game() 
     {
         this.board = new int[BOARD_SIZE][BOARD_SIZE]; // wyzerowana na wejściu
-        _players = new ArrayList<>();
+        players = new ArrayList<>();
         
         AddPlayers();
+                
+        // losowanie zaczynającego playera, 50% szans na każdego w przypadku dwóch graczy
+        Collections.shuffle(players);
     }
     
     public void PrintBoard()
@@ -47,7 +52,7 @@ public class Game
         for(int i=0;i<PLAYERS_QUANTITY; ++i)
         {
             // losowane jest UID od 1 do ...
-            _players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)+1));
+            players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)+1));
         }   
     }
     

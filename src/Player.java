@@ -22,8 +22,8 @@ public class Player
         dotShapePawn    = new DotShapePawn(id);
         lShapePawn      = new LShapePawn(id);
         
-        dotShapePawn.PrintAllConfigurations();
-        lShapePawn.PrintAllConfigurations();
+        //dotShapePawn.PrintAllConfigurations();
+        //lShapePawn.PrintAllConfigurations();
         
         
         _id = id;
@@ -35,13 +35,17 @@ public class Player
     }
 }
 
-// 
 
+/*******************************************************************/
+/*******************************************************************/ 
 class Position
 {
     public int x, y;
 }
 
+
+/*******************************************************************/
+/*******************************************************************/ 
 abstract class Pawn
 {
     public final static int SMALL_BOARD_SIZE = 3;
@@ -78,12 +82,14 @@ abstract class Pawn
     
     public void PrintAllConfigurations()
     {
+        System.out.println("----- "+_id+" -----");
         for(int i=0; i < listOfPawnConfigurations.size(); ++i)
         {
             System.out.println("Conf" + i + "= ");
             Print(listOfPawnConfigurations.get(i));
             System.out.println();
         }
+        System.out.println("---------------");
     }
     
     public void Print(int[][] matrixToPrint)
@@ -157,6 +163,8 @@ abstract class Pawn
 }
 
 
+/*******************************************************************/
+/*******************************************************************/ 
 class DotShapePawn extends Pawn
 {
     public DotShapePawn(int id)
@@ -175,7 +183,7 @@ class DotShapePawn extends Pawn
         try
         {
             if(listOfPawnConfigurations.size() != 1)
-                throw new Exception("[Błąd], możliwości obrotu w dotShape != 1");
+                throw new Exception("[Błąd#1], możliwości obrotu w dotShape nie mogą być != 1");
         }
         catch(Exception ex)
         {
@@ -184,6 +192,8 @@ class DotShapePawn extends Pawn
     }
 }
 
+/*******************************************************************/
+/*******************************************************************/ 
 class LShapePawn extends Pawn
 {
     public LShapePawn(int id)
