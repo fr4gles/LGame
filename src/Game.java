@@ -22,6 +22,7 @@ public final class Game
     private final int[][] empty_board;
     
     private List<Player> players;
+    private int number_of_movements;
 
     public static void main(String[] args)
     {
@@ -57,11 +58,8 @@ public final class Game
             System.out.println("- - - - - - - - - - -\n");
         }
         
-        int number_of_movements = 0;
-        while(Play() == true)
-        {
-            ++number_of_movements;
-        }
+        number_of_movements = 0;
+        while(Play() == true);
         System.out.println("Ilosc ruchow = "+number_of_movements);
         
     }
@@ -77,6 +75,7 @@ public final class Game
             
             if(x.IsMoved() != wasPreviouslyMoved)
             {
+                ++number_of_movements;
                 x.ResetIsMoved();
                 continue;
             }
