@@ -13,7 +13,7 @@ import java.util.Random;
 public final class Game 
 {
 //  publiczne 
-    public final static boolean TEST = true;
+    public final static boolean TEST = false;
     public final static int BOARD_SIZE = 4;
     public final static int PLAYERS_QUANTITY = 2;
     public static int[][] board; // plansza
@@ -25,8 +25,12 @@ public final class Game
 
     public static void main(String[] args)
     {
-       Game game = new Game(); 
-       Game.PrintBoard();
+        Game game = new Game(); 
+        if(TEST)
+        {
+            System.out.println("= = = = = KONIEC = = = = = = =");
+            Game.PrintBoard();
+        }
     }
 
     public Game() 

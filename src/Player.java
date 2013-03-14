@@ -65,7 +65,8 @@ public class Player
             DownPawnOnBoard(pawnsList.get(currentPawn));
         }
         
-        Game.PrintBoard();
+        if(Game.TEST)
+            Game.PrintBoard();
     }
     
     public boolean SearchPlaceForPawn(Pawn p)
