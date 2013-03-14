@@ -25,7 +25,7 @@ public class Player
         pawnsList = new ArrayList<>();
 
         pawnsList.add(new LShapePawn(id,configuration));
-        pawnsList.add(new DotShapePawn(id));
+        pawnsList.add(new DotShapePawn(id+1));
         
         //pawnsList.get(0).PrintAllConfigurations();
         //pawnsList.get(1).PrintAllConfigurations();
@@ -38,6 +38,8 @@ public class Player
     {
         int i = 0,
             check = canMove;
+        
+        // podnoszenie pionka
        
         if(SearchPlaceForPawn(pawnsList.get(i++)) == true)
             ++canMove; 
@@ -68,23 +70,24 @@ public class Player
                 
                 for(int c = 0; c < p.GetAmoutOfRotatePosibilities(); ++c)
                 {
-                    for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
-                    {
-                        if(i>-1 && i < 4)
-                            for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
-                            {
-                                if(j>-1 && j < 4)
+                    if((x_pos != p.GetPosition().x) && (y_pos !=p.GetPosition().y) && (c != p.GetConfInUse()))
+                        for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
+                        {
+                            if(i>-1 && i < 4)
+                                for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                                 {
-                                    //tmp = (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
-                                    if( (p.GetlistOfPawnConfigurations().get(c))[x][y] != 0 )
+                                    if(j>-1 && j < 4)
                                     {
-                                        if(Game.board[i][j] == 0);
-                                            return false;
-            //                            board[i][j] =  (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
+                                        //tmp = (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
+                                        if( (p.GetlistOfPawnConfigurations().get(c))[x][y] != 0 )
+                                        {
+                                            if(Game.board[i][j] == 0) //tutaj ... sprawdzić id?
+                                                return false;
+                //                            board[i][j] =  (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
+                                        }
                                     }
                                 }
-                            }
-                    }
+                        }
                 }
             }
         }
@@ -262,6 +265,11 @@ abstract class Pawn
         return this.configurationInUse;
     }
     abstract public void InitRotateAndFlipPawnPosibilities(int id);
+    
+    public int GetID()
+    {
+        return _id;
+    }
 }
 
 
