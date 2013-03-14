@@ -25,7 +25,7 @@ public final class Game
     public static void main(String[] args)
     {
        Game game = new Game(); 
-       game.PrintBoard();
+       Game.PrintBoard();
     }
 
     public Game() 
@@ -38,23 +38,18 @@ public final class Game
         
         AddPlayers();
         
-//        players.add(new Player(new Random().nextInt(10/*Integer.MAX_VALUE*/)+1,0));
-//        players.add(new Player(new Random().nextInt(10/*Integer.MAX_VALUE*/)+1,2));
-        
-        players.get(0).GetPawns().get(0).SetPosition(new Position(2,2));
-        players.get(0).GetPawns().get(1).SetPosition(new Position(3,0));
-        
-        players.get(1).GetPawns().get(0).SetPosition(new Position(1,1));
-        players.get(1).GetPawns().get(1).SetPosition(new Position(0,3));
-        
         Collections.shuffle(players);
         
-//        int number_of_movements = 0;
-//        while(Play() == true)
-//        {
-//            ++number_of_movements;
-//        }
-//        System.out.println("Ilość ruchów = "+number_of_movements);
+        InitPlayers();
+        
+//        PrintBoard();
+        
+        int number_of_movements = 0;
+        while(Play() == true)
+        {
+            ++number_of_movements;
+        }
+        System.out.println("Ilosc ruchow = "+number_of_movements);
         
         
         
@@ -67,7 +62,6 @@ public final class Game
     
     public boolean Play()
     {
-//        int i=0;
         boolean wasPreviouslyMoved = false;
         for(Player x: players)
         {
@@ -82,61 +76,29 @@ public final class Game
         }
         return true;
     }
+       
     
-    public void DownPawnOnBoard(Pawn p)
-    {
-        int x_pos = p.GetPosition().x;
-        int y_pos = p.GetPosition().y;
-        
-        for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
-        {
-            if(i>-1)
-            {
-                for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
-                {
-                    if(j>-1)
-                    {
-                        if( (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y] != 0)
-                        {
-                            board[i][j] =  (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    public void UpPawnFromBoard(Pawn p)
-    {
-        int x_pos = p.GetPosition().x;
-        int y_pos = p.GetPosition().y;
-        
-        for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
-        {
-            if(i>-1)
-            {
-                for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
-                {
-                    if(j>-1)
-                    {
-                        if( (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y] == p.GetID())
-                        {
-                            board[i][j] =  0;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    
-    
-    
-    public void PrintBoard()
+    public static void PrintBoard()
     {
         for( int[] i : board )
         {
             System.out.println(Arrays.toString(i));
         }
+    }
+    
+    private void InitPlayers()
+    {
+        players.get(0).GetPawns().get(0).SetPosition(new Position(2,2,0));
+        players.get(0).GetPawns().get(1).SetPosition(new Position(3,0,0));
+        
+        players.get(1).GetPawns().get(0).SetPosition(new Position(1,1,2));
+        players.get(1).GetPawns().get(1).SetPosition(new Position(0,3,0));
+        
+        players.get(0).DownPawnOnBoard(players.get(0).GetPawns().get(0));
+        players.get(0).DownPawnOnBoard(players.get(0).GetPawns().get(1));
+        
+        players.get(1).DownPawnOnBoard(players.get(1).GetPawns().get(0));
+        players.get(1).DownPawnOnBoard(players.get(1).GetPawns().get(1));
     }
     
     private void AddPlayers()
@@ -145,7 +107,7 @@ public final class Game
         for(int i=0;i<PLAYERS_QUANTITY; ++i)
         {
             // losowane jest UID od 1 do ...
-            players.add(new Player(uniqueID.nextInt(50/*Integer.MAX_VALUE*/)+1,i+i));
+            players.add(new Player(uniqueID.nextInt(98/*Integer.MAX_VALUE*/)+1));
         }   
     }
     
