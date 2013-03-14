@@ -32,17 +32,26 @@ public class Game
         this.board = new int[BOARD_SIZE][BOARD_SIZE]; // wyzerowana na wejściu
         players = new ArrayList<>();
         
-        //AddPlayers();
+        AddPlayers();
         
-        players.add(new Player(new Random().nextInt(10/*Integer.MAX_VALUE*/)+1));
+//        players.add(new Player(new Random().nextInt(10/*Integer.MAX_VALUE*/)+1,0));
+//        players.add(new Player(new Random().nextInt(10/*Integer.MAX_VALUE*/)+1,2));
+        
         players.get(0).GetPawns().get(0).SetPosition(new Position(2,2));
         players.get(0).GetPawns().get(1).SetPosition(new Position(3,0));
+        
+        players.get(1).GetPawns().get(0).SetPosition(new Position(1,1));
+        players.get(1).GetPawns().get(1).SetPosition(new Position(0,3));
+        
         
         DownPawnOnBoard(players.get(0).GetPawns().get(0));
         DownPawnOnBoard(players.get(0).GetPawns().get(1));
         
-        players.get(0).GetPawns().get(0).SetPosition(new Position(2,2));
-        players.get(0).GetPawns().get(1).SetPosition(new Position(3,0));
+        DownPawnOnBoard(players.get(1).GetPawns().get(0));
+        DownPawnOnBoard(players.get(1).GetPawns().get(1));
+        
+//        players.get(0).GetPawns().get(0).SetPosition(new Position(2,2));
+//        players.get(0).GetPawns().get(1).SetPosition(new Position(3,0));
         
                 
         // losowanie zaczynającego playera, 50% szans na każdego w przypadku dwóch graczy
@@ -86,7 +95,7 @@ public class Game
         for(int i=0;i<PLAYERS_QUANTITY; ++i)
         {
             // losowane jest UID od 1 do ...
-            players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)+1));
+            players.add(new Player(uniqueID.nextInt(10/*Integer.MAX_VALUE*/)+1,i+i));
         }   
     }
     

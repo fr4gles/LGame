@@ -14,16 +14,16 @@ public class Player
     public static final int NUMBER_OF_DOT_SHAPE_ROTATE_POSIBILITIES = 0;
     public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES = 0;
     
-    private Pawn lShapePawn, dotShapePawn;
     private List<Pawn> pawnsList;
     
     final public int _id;
     
-    public Player(int id)
+    public Player(int id, int configuration)
     {
         pawnsList = new ArrayList<>();
-        dotShapePawn    = new DotShapePawn(id);
-        lShapePawn      = new LShapePawn(id);
+        
+        Pawn dotShapePawn    = new DotShapePawn(id);
+        Pawn lShapePawn      = new LShapePawn(id,configuration);
         
         //dotShapePawn.SetPosition(new Position(0,3));
         
@@ -254,9 +254,10 @@ class DotShapePawn extends Pawn
 /*******************************************************************/ 
 class LShapePawn extends Pawn
 {
-    public LShapePawn(int id)
+    public LShapePawn(int id, int configuration)
     {
         super(id);
+        this.configurationInUse = configuration;
     }
     
     @Override
