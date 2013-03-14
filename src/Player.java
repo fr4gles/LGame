@@ -42,25 +42,25 @@ public class Player
     {
         currentPawn=0;
         
-        boolean moved = false;
+        moved = false;
         
         UpPawnFromBoard(pawnsList.get(currentPawn));
-        //Game.PrintBoard();
         if( SearchPlaceForPawn(pawnsList.get(currentPawn)) )
         {
             moved = true;
             DownPawnOnBoard(pawnsList.get(currentPawn));
-            Game.PrintBoard();
         }
         
         ++currentPawn;
         
-//        if(moved == true)
-//        {
-//            UpPawnFromBoard(pawnsList.get(currentPawn));
-//            SearchPlaceForPawn(pawnsList.get(currentPawn));
-//            DownPawnOnBoard(pawnsList.get(currentPawn));
-//        }
+        if(moved == true)
+        {
+            UpPawnFromBoard(pawnsList.get(currentPawn));
+            SearchPlaceForPawn(pawnsList.get(currentPawn));
+            DownPawnOnBoard(pawnsList.get(currentPawn));
+        }
+        
+        Game.PrintBoard();
     }
     
     public boolean SearchPlaceForPawn(Pawn p)
@@ -69,6 +69,7 @@ public class Player
         // losowanie miejsca
         // wybór miejsca
         // aktualizacja position
+        // jeśli brak powodzenia - revert
         
         int goodPositions = 0;
         
@@ -103,10 +104,8 @@ public class Player
                                             ++goodPositions;
 
                     if(goodPositions == p.GetNumberOcOccupiedFields())
-                    {
                         goodMove.add( new Position(ix, iy, c));
-                        System.out.println(goodMove.get(goodMove.size()-1));
-                    }
+                        //System.out.println(goodMove.get(goodMove.size()-1));
                 }
             }
         }
@@ -183,6 +182,11 @@ public class Player
     public List<Pawn> GetPawns()
     {
         return pawnsList;
+    }
+    
+    public void ResetIsMoved()
+    {
+        moved = false;
     }
     
     public boolean IsMoved()

@@ -42,7 +42,7 @@ public final class Game
         
         InitPlayers();
         
-//        PrintBoard();
+        PrintBoard();
         
         int number_of_movements = 0;
         while(Play() == true)
@@ -70,7 +70,10 @@ public final class Game
             x.go();
             
             if(x.IsMoved() != wasPreviouslyMoved)
+            {
+                x.ResetIsMoved();
                 continue;
+            }
             else
                 return false;
         }
