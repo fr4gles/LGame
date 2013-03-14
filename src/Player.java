@@ -88,8 +88,10 @@ public class Player
         
         List<Position> goodMove = new ArrayList<>();
         
+        int examinedConf[][];
         for(int c = 0; c < p.GetAmoutOfRotatePosibilities(); ++c)
         {
+            examinedConf = p.GetlistOfPawnConfigurations().get(c);
             for(int ix = 0; ix < Game.BOARD_SIZE; ++ix)
             {
                 for(int iy = 0; iy < Game.BOARD_SIZE; ++iy)
@@ -106,7 +108,7 @@ public class Player
                         if(i>-1 && i<4)
                             for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                                 if(j>-1 && j<4)
-                                    if( ((p.GetlistOfPawnConfigurations().get(c))[x][y] != 0) && (Game.board[i][j] == 0) )
+                                    if( (examinedConf[x][y] != 0) && (Game.board[i][j] == 0) )
                                             ++goodPositions;
 
                     if(goodPositions == p.GetNumberOcOccupiedFields())
@@ -125,7 +127,7 @@ public class Player
             pawnsList.get(currentPawn).SetPosition( goodMove.get( randPosition.nextInt(goodMove.size()) ) );
             
             if(Game.TEST)
-                System.out.println("- > "+pawnsList.get(currentPawn).GetPosition());
+                System.out.println(" - > "+pawnsList.get(currentPawn).GetPosition());
             
             return true;
         }
@@ -304,8 +306,6 @@ abstract class Pawn
     
     public int[][] RotateCW(int[][] boardToRotate)
     {
-        // if jesli więćej nic 4 obroty?
-        
         int[][] tmp = new int[SMALL_BOARD_SIZE][SMALL_BOARD_SIZE];
         
         for (int i = 0; i < SMALL_BOARD_SIZE; i++) 
@@ -380,11 +380,7 @@ abstract class Pawn
     {
         return this.listOfPawnConfigurations;
     }
-    
-//    public int GetConfInUse()
-//    {
-//        return this.position.conf;
-//    }
+
     abstract public void InitRotateAndFlipPawnPosibilities(int id);
     
     public int GetID()
