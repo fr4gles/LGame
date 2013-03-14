@@ -10,14 +10,16 @@ import java.util.Random;
  * @author Michal Franczyk
  * @date 13.03.2013
  */
-public class Game 
+public final class Game 
 {
 //  publiczne 
     public final static int BOARD_SIZE = 4;
     public final static int PLAYERS_QUANTITY = 2;
-    
+    public static int[][] board; // plansza
 //  prywatne
-    private int[][] board; // plansza
+    
+    private final int[][] empty_board;
+    private boolean [] isPreviouslyMoved;
     
     private List<Player> players;
 
@@ -29,7 +31,11 @@ public class Game
 
     public Game() 
     {
-        this.board = new int[BOARD_SIZE][BOARD_SIZE]; // wyzerowana na wejściu
+        Game.board = new int[BOARD_SIZE][BOARD_SIZE]; // wyzerowana na wejściu
+        
+        this.empty_board = new int[BOARD_SIZE][BOARD_SIZE];
+        this.isPreviouslyMoved = new boolean[PLAYERS_QUANTITY];
+        
         players = new ArrayList<>();
         
         AddPlayers();
@@ -43,19 +49,50 @@ public class Game
         players.get(1).GetPawns().get(0).SetPosition(new Position(1,1));
         players.get(1).GetPawns().get(1).SetPosition(new Position(0,3));
         
+        Collections.shuffle(players);
         
-        DownPawnOnBoard(players.get(0).GetPawns().get(0));
-        DownPawnOnBoard(players.get(0).GetPawns().get(1));
+        int number_of_movements = 0;
+        while(Play() == true)
+        {
+            ++number_of_movements;
+        }
+        System.out.println("Ilość ruchów = "+number_of_movements);
         
-        DownPawnOnBoard(players.get(1).GetPawns().get(0));
-        DownPawnOnBoard(players.get(1).GetPawns().get(1));
+//        DownPawnOnBoard(players.get(0).GetPawns().get(0));
+//        DownPawnOnBoard(players.get(0).GetPawns().get(1));
+//        
+//        DownPawnOnBoard(players.get(1).GetPawns().get(0));
+//        DownPawnOnBoard(players.get(1).GetPawns().get(1));
         
 //        players.get(0).GetPawns().get(0).SetPosition(new Position(2,2));
 //        players.get(0).GetPawns().get(1).SetPosition(new Position(3,0));
         
                 
-        // losowanie zaczynającego playera, 50% szans na każdego w przypadku dwóch graczy
-        Collections.shuffle(players);
+    }
+    
+    public boolean Play()
+    {
+        int i=0, isPreviouslyMoved = 0;
+        for(Player x: players)
+        {
+            isPreviouslyMoved = x.isMoved();
+            
+            x.go();
+            
+            if(x.isMoved() != isPreviouslyMoved)
+            {
+                board = empty_board.clone();
+            
+                for(Pawn y: x.GetPawns())
+                {
+                    DownPawnOnBoard(y);
+                }
+                ++i;
+            }
+            else
+                return false;
+        }
+        return true;
     }
     
     public void DownPawnOnBoard(Pawn p)
@@ -65,11 +102,11 @@ public class Game
         
         for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
         {
-            if(i>-1)
+            if(i>-1 && i<4)
             {
                 for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                 {
-                    if(j>-1)
+                    if(j>-1 && j<4)
                     {
                         if( (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y] != 0)
                         {

@@ -15,40 +15,81 @@ public class Player
     public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES = 0;
     
     private List<Pawn> pawnsList;
+    private int canMove;
     
     final public int _id;
+    
     
     public Player(int id, int configuration)
     {
         pawnsList = new ArrayList<>();
+
+        pawnsList.add(new LShapePawn(id,configuration));
+        pawnsList.add(new DotShapePawn(id));
         
-        Pawn dotShapePawn    = new DotShapePawn(id);
-        Pawn lShapePawn      = new LShapePawn(id,configuration);
-        
-        //dotShapePawn.SetPosition(new Position(0,3));
-        
-        pawnsList.add(lShapePawn);
-        pawnsList.add(dotShapePawn);
-        
-        //pawnsList.get(0).SetPosition(new Position(0, 3));
-        
-        //DownPawn(dotShapePawn);
-        
-        //dotShapePawn.PrintAllConfigurations();
-        //lShapePawn.PrintAllConfigurations();
-        
-        
+        //pawnsList.get(0).PrintAllConfigurations();
+        //pawnsList.get(1).PrintAllConfigurations();
+
         _id = id;
-    }
-    
-    public void DownPawn(Pawn p)
-    {
-        
+        canMove = 0;
     }
     
     public void go()
     {
-        //
+        int i = 0,
+            check = canMove;
+       
+        if(SearchPlaceForPawn(pawnsList.get(i++)) == true)
+            ++canMove; 
+        
+        if(check != canMove)
+            SearchPlaceForPawn(pawnsList.get(i));
+        
+    }
+    
+    public boolean SearchPlaceForPawn(Pawn p)
+    {
+        // znalezienie możliwych miejsc do położenia
+        // losowanie miejsca
+        // wybór miejsca
+        // aktualizacja position
+        
+        int x_pos = 0;
+        int y_pos = 0;
+        
+        int tmp = 0;
+        
+        for(int ix = 0; ix < Game.BOARD_SIZE; ++ix)
+        {
+            for(int iy = 0; iy < Game.BOARD_SIZE; ++iy)
+            {
+                x_pos = ix;
+                y_pos = iy;
+                
+                for(int c = 0; c < p.GetAmoutOfRotatePosibilities(); ++c)
+                {
+                    for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
+                    {
+                        if(i>-1 && i < 4)
+                            for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
+                            {
+                                if(j>-1 && j < 4)
+                                {
+                                    //tmp = (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
+                                    if( (p.GetlistOfPawnConfigurations().get(c))[x][y] != 0 )
+                                    {
+                                        if(Game.board[i][j] == 0);
+                                            return false;
+            //                            board[i][j] =  (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
+                                    }
+                                }
+                            }
+                    }
+                }
+            }
+        }
+        
+        return true;
     }
     
     public void SetPawns(List<Pawn> list)
@@ -60,9 +101,12 @@ public class Player
     {
         return pawnsList;
     }
+    
+    public int isMoved()
+    {
+        return canMove;
+    }
 }
-
-
 /*******************************************************************/
 
 
