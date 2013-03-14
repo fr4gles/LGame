@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -14,8 +15,10 @@ public class Player
     public static final int NUMBER_OF_DOT_SHAPE_ROTATE_POSIBILITIES = 0;
     public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES = 0;
     
+    
     private List<Pawn> pawnsList;
-    private int canMove;
+    private int currentPawn;
+    private boolean moved;
     
     final public int _id;
     
@@ -31,22 +34,31 @@ public class Player
         //pawnsList.get(1).PrintAllConfigurations();
 
         _id = id;
-        canMove = 0;
+        currentPawn = 0;
+        moved = false;
     }
     
     public void go()
     {
-        int i = 0,
-            check = canMove;
+        currentPawn=0;
         
-        // podnoszenie pionka
-       
-        if(SearchPlaceForPawn(pawnsList.get(i++)) == true)
-            ++canMove; 
+        boolean moved = false;
         
-        if(check != canMove)
-            SearchPlaceForPawn(pawnsList.get(i));
+        UpPawnFromBoard(pawnsList.get(currentPawn));
+        if( SearchPlaceForPawn(pawnsList.get(currentPawn)) )
+        {
+            moved = true;
+            DownPawnOnBoard(pawnsList.get(currentPawn));
+        }
         
+        ++currentPawn;
+        
+        if(moved == true)
+        {
+            UpPawnFromBoard(pawnsList.get(currentPawn));
+            SearchPlaceForPawn(pawnsList.get(currentPawn));
+            DownPawnOnBoard(pawnsList.get(currentPawn));
+        }
     }
     
     public boolean SearchPlaceForPawn(Pawn p)
@@ -59,7 +71,11 @@ public class Player
         int x_pos = 0;
         int y_pos = 0;
         
-        int tmp = 0;
+        int tmpx = p.GetPosition().x;
+        int tmpy = p.GetPosition().y;
+        int tmpc = p.GetPosition().conf;
+        
+        List<Position> goodMove = new ArrayList<>();
         
         for(int ix = 0; ix < Game.BOARD_SIZE; ++ix)
         {
@@ -70,30 +86,84 @@ public class Player
                 
                 for(int c = 0; c < p.GetAmoutOfRotatePosibilities(); ++c)
                 {
-                    if((x_pos != p.GetPosition().x) && (y_pos !=p.GetPosition().y) && (c != p.GetConfInUse()))
+                    if((x_pos != tmpx) && (y_pos != tmpy) && (c != tmpc))
                         for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
                         {
-                            if(i>-1 && i < 4)
+                            if(i>-1)
                                 for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                                 {
-                                    if(j>-1 && j < 4)
+                                    if(j>-1)
                                     {
-                                        //tmp = (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
                                         if( (p.GetlistOfPawnConfigurations().get(c))[x][y] != 0 )
                                         {
-                                            if(Game.board[i][j] == 0) //tutaj ... sprawdzić id?
+                                            if(Game.board[i][j] != 0)
                                                 return false;
-                //                            board[i][j] =  (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y];
                                         }
                                     }
                                 }
                         }
+                    
+                    goodMove.add( new Position(ix, iy, c));
                 }
             }
         }
         
+        Random randPosition = new Random();
+        
+        pawnsList.get(currentPawn).SetPosition( goodMove.get( randPosition.nextInt(goodMove.size()) ) );
+        
         return true;
     }
+    
+    public void UpPawnFromBoard(Pawn p)
+    {
+        int x_pos = p.GetPosition().x;
+        int y_pos = p.GetPosition().y;
+        int conf  = p.GetPosition().conf;
+        
+        for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
+        {
+            if(i>-1)
+            {
+                for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
+                {
+                    if(j>-1)
+                    {
+                        if( (p.GetlistOfPawnConfigurations().get(conf))[x][y] == p.GetID())
+                        {
+                            Game.board[i][j] =  0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    public void DownPawnOnBoard(Pawn p)
+    {
+        int x_pos = p.GetPosition().x;
+        int y_pos = p.GetPosition().y;
+        int conf  = p.GetPosition().conf;
+        
+        for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
+        {
+            if(i>-1)
+            {
+                for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
+                {
+                    if(j>-1)
+                    {
+                        if( (p.GetlistOfPawnConfigurations().get(conf))[x][y] != 0)
+                        {
+                            Game.board[i][j] =  (p.GetlistOfPawnConfigurations().get(conf))[x][y];
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+
     
     public void SetPawns(List<Pawn> list)
     {
@@ -105,9 +175,9 @@ public class Player
         return pawnsList;
     }
     
-    public int isMoved()
+    public boolean IsMoved()
     {
-        return canMove;
+        return moved;
     }
 }
 /*******************************************************************/
@@ -117,18 +187,29 @@ public class Player
 /*******************************************************************/ 
 class Position
 {
-    public int x, y;
+    // x, y współrzędne
+    // conf konfiguracja pionka
+    public int x, y, conf;
 
     public Position() 
     {
         this.x  = -1;
         this.y  = -1;
+        this.conf = 0;
     }
    
     public Position(int x, int y)
     {
         this.x = x;
         this.y = y;
+        this.conf = 0;
+    }
+    
+    public Position(int x, int y, int c)
+    {
+        this.x = x;
+        this.y = y;
+        this.conf = c;
     }
 }
 
@@ -141,24 +222,28 @@ abstract class Pawn
     
     protected final int     _id;
     protected List<int[][]> listOfPawnConfigurations;
-    protected int           configurationInUse;
     
     protected Position      position;
     
     public Pawn(int id)
     {
+        _id = id;
+        Init();
+    }
+    
+    
+    
+    private void Init()
+    {
         listOfPawnConfigurations = new ArrayList<>();
         listOfPawnConfigurations.add(new int[SMALL_BOARD_SIZE][SMALL_BOARD_SIZE]);
-        
-        configurationInUse = 0; // domyślna wartość to 0 
-        _id = id;
         
         position =  new Position();
         
         // sprawdzić czy ma sens .... w klasie position jest -1
         position.x = position.y = -1;   // początkowe przypisanie pozycji 
 
-        InitRotateAndFlipPawnPosibilities(id);
+        InitRotateAndFlipPawnPosibilities(_id);
     }
     
     public void PrintAllConfigurations()
@@ -260,10 +345,10 @@ abstract class Pawn
         return this.listOfPawnConfigurations;
     }
     
-    public int GetConfInUse()
-    {
-        return this.configurationInUse;
-    }
+//    public int GetConfInUse()
+//    {
+//        return this.position.conf;
+//    }
     abstract public void InitRotateAndFlipPawnPosibilities(int id);
     
     public int GetID()
@@ -286,7 +371,7 @@ class DotShapePawn extends Pawn
     public void InitRotateAndFlipPawnPosibilities(int id)
     {
         // wprowadzenie początkowych danych, dot shape
-        listOfPawnConfigurations.get(configurationInUse)[1][1] = id;
+        listOfPawnConfigurations.get(position.conf)[1][1] = id;
         
         // tutaj nie jest potrzebne obrananie
         // zatem nie m sensu generowac możliwych pozycji
@@ -309,17 +394,17 @@ class LShapePawn extends Pawn
     public LShapePawn(int id, int configuration)
     {
         super(id);
-        this.configurationInUse = configuration;
+        this.position.conf = configuration;
     }
     
     @Override
     public void InitRotateAndFlipPawnPosibilities(int id) 
     {
         // wprowadzenie początkowych danych, L shape
-        listOfPawnConfigurations.get(configurationInUse)[0][1]= id;
-        listOfPawnConfigurations.get(configurationInUse)[1][1]= id;
-        listOfPawnConfigurations.get(configurationInUse)[2][1]= id;
-        listOfPawnConfigurations.get(configurationInUse)[2][0]= id;
+        listOfPawnConfigurations.get(position.conf)[0][1]= id;
+        listOfPawnConfigurations.get(position.conf)[1][1]= id;
+        listOfPawnConfigurations.get(position.conf)[2][1]= id;
+        listOfPawnConfigurations.get(position.conf)[2][0]= id;
         
         
         {   // tworzenie listy wszystkich możliwych układów ułożenia pionka (w tablicy 3x3)

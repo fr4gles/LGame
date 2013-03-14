@@ -19,7 +19,6 @@ public final class Game
 //  prywatne
     
     private final int[][] empty_board;
-    private boolean [] isPreviouslyMoved;
     
     private List<Player> players;
 
@@ -34,7 +33,6 @@ public final class Game
         Game.board = new int[BOARD_SIZE][BOARD_SIZE]; // wyzerowana na wejściu
         
         this.empty_board = new int[BOARD_SIZE][BOARD_SIZE];
-        this.isPreviouslyMoved = new boolean[PLAYERS_QUANTITY];
         
         players = new ArrayList<>();
         
@@ -58,32 +56,27 @@ public final class Game
 //        }
 //        System.out.println("Ilość ruchów = "+number_of_movements);
         
-        DownPawnOnBoard(players.get(0).GetPawns().get(0));
-        DownPawnOnBoard(players.get(0).GetPawns().get(1));
         
-        DownPawnOnBoard(players.get(1).GetPawns().get(0));
-        DownPawnOnBoard(players.get(1).GetPawns().get(1));
+        
+//        DownPawnOnBoard(players.get(0).GetPawns().get(0));
+//        DownPawnOnBoard(players.get(0).GetPawns().get(1));
+//        
+//        DownPawnOnBoard(players.get(1).GetPawns().get(0));
+//        DownPawnOnBoard(players.get(1).GetPawns().get(1));
     }
     
     public boolean Play()
     {
-        int i=0, isPreviouslyMoved = 0;
+//        int i=0;
+        boolean wasPreviouslyMoved = false;
         for(Player x: players)
         {
-            isPreviouslyMoved = x.isMoved();
+            wasPreviouslyMoved = x.IsMoved();
             
             x.go();
             
-            if(x.isMoved() != isPreviouslyMoved)
-            {
-                board = empty_board.clone();
-            
-                for(Pawn y: x.GetPawns())
-                {
-                    DownPawnOnBoard(y);
-                }
-                ++i;
-            }
+            if(x.IsMoved() != wasPreviouslyMoved)
+                continue;
             else
                 return false;
         }
@@ -97,11 +90,11 @@ public final class Game
         
         for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
         {
-            if(i>-1 && i<4)
+            if(i>-1)
             {
                 for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                 {
-                    if(j>-1 && j<4)
+                    if(j>-1)
                     {
                         if( (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y] != 0)
                         {
@@ -120,11 +113,11 @@ public final class Game
         
         for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
         {
-            if(i>-1 && i<4)
+            if(i>-1)
             {
                 for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                 {
-                    if(j>-1 && j<4)
+                    if(j>-1)
                     {
                         if( (p.GetlistOfPawnConfigurations().get(p.GetConfInUse()))[x][y] == p.GetID())
                         {
