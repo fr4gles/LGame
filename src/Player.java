@@ -14,13 +14,25 @@ public class Player
     public static final int NUMBER_OF_DOT_SHAPE_ROTATE_POSIBILITIES = 0;
     public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES = 0;
     
-    public Pawn lShapePawn, dotShapePawn;
+    private Pawn lShapePawn, dotShapePawn;
+    private List<Pawn> pawnsList;
+    
     final public int _id;
     
     public Player(int id)
     {
+        pawnsList = new ArrayList<>();
         dotShapePawn    = new DotShapePawn(id);
         lShapePawn      = new LShapePawn(id);
+        
+        //dotShapePawn.SetPosition(new Position(0,3));
+        
+        pawnsList.add(lShapePawn);
+        pawnsList.add(dotShapePawn);
+        
+        //pawnsList.get(0).SetPosition(new Position(0, 3));
+        
+        //DownPawn(dotShapePawn);
         
         //dotShapePawn.PrintAllConfigurations();
         //lShapePawn.PrintAllConfigurations();
@@ -29,11 +41,29 @@ public class Player
         _id = id;
     }
     
+    public void DownPawn(Pawn p)
+    {
+        
+    }
+    
     public void go()
     {
         //
     }
+    
+    public void SetPawns(List<Pawn> list)
+    {
+        this.pawnsList = list;
+    }
+    
+    public List<Pawn> GetPawns()
+    {
+        return pawnsList;
+    }
 }
+
+
+/*******************************************************************/
 
 
 /*******************************************************************/
@@ -41,6 +71,18 @@ public class Player
 class Position
 {
     public int x, y;
+
+    public Position() 
+    {
+        this.x  = -1;
+        this.y  = -1;
+    }
+   
+    public Position(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 }
 
 
@@ -65,19 +107,11 @@ abstract class Pawn
         _id = id;
         
         position =  new Position();
+        
+        // sprawdzić czy ma sens .... w klasie position jest -1
         position.x = position.y = -1;   // początkowe przypisanie pozycji 
 
         InitRotateAndFlipPawnPosibilities(id);
-    }
-    
-    public void SetPosition(Position pos)
-    {
-        this.position = pos;
-    }
-    
-    public Position GetPosition()
-    {
-        return this.position;
     }
     
     public void PrintAllConfigurations()
@@ -159,6 +193,30 @@ abstract class Pawn
         return this.listOfPawnConfigurations.size();
     }
     
+    public void SetPosition(Position pos)
+    {
+        this.position = pos;
+    }
+    
+    public Position GetPosition()
+    {
+        return this.position;
+    }
+    
+    public int[][] GetPawnConfiguration(int index)
+    {
+        return this.listOfPawnConfigurations.get(index);
+    }
+    
+    public List<int[][]> GetlistOfPawnConfigurations()
+    {
+        return this.listOfPawnConfigurations;
+    }
+    
+    public int GetConfInUse()
+    {
+        return this.configurationInUse;
+    }
     abstract public void InitRotateAndFlipPawnPosibilities(int id);
 }
 
