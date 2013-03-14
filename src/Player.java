@@ -30,8 +30,13 @@ public class Player
         pawnsList.add(new LShapePawn(id));
         pawnsList.add(new DotShapePawn(id+1));
         
-//        pawnsList.get(0).PrintAllConfigurations();
-//        pawnsList.get(1).PrintAllConfigurations();
+        if(Game.TEST)
+        {
+            System.out.println("- - Configuration Board: - -");
+            pawnsList.get(0).PrintAllConfigurations();
+            pawnsList.get(1).PrintAllConfigurations();
+            System.out.println("- - - - - - - - - - -\n");
+        }
 
         _id = id;
         currentPawn = 0;
@@ -104,8 +109,11 @@ public class Player
                                             ++goodPositions;
 
                     if(goodPositions == p.GetNumberOcOccupiedFields())
+                    {
                         goodMove.add( new Position(ix, iy, c));
-                        //System.out.println(goodMove.get(goodMove.size()-1));
+                        if(Game.TEST)
+                            System.out.println(goodMove.get(goodMove.size()-1));
+                    }
                 }
             }
         }
@@ -114,12 +122,19 @@ public class Player
         {
             Random randPosition = new Random();
             pawnsList.get(currentPawn).SetPosition( goodMove.get( randPosition.nextInt(goodMove.size()) ) );
-            System.out.println("- > "+pawnsList.get(currentPawn).GetPosition());
+            
+            if(Game.TEST)
+                System.out.println("- > "+pawnsList.get(currentPawn).GetPosition());
+            
             return true;
         }
         else
         {
             DownPawnOnBoard(p); // revert changes
+            
+            if(Game.TEST)
+                System.out.println("- - REVERT CHANGES - -");
+            
             return false;
         }
     }

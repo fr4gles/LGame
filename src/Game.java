@@ -13,6 +13,7 @@ import java.util.Random;
 public final class Game 
 {
 //  publiczne 
+    public final static boolean TEST = true;
     public final static int BOARD_SIZE = 4;
     public final static int PLAYERS_QUANTITY = 2;
     public static int[][] board; // plansza
@@ -42,7 +43,15 @@ public final class Game
         
         InitPlayers();
         
-        PrintBoard();
+        if(TEST)
+        {
+            System.out.println("= = = = = = = = = = = = = = =");
+            System.out.println("= = = = = START = = = = = = =");
+            System.out.println("= = = = = = = = = = = = = = =");
+            System.out.println(">>> - - Init Board: - - <<<");
+            PrintBoard();
+            System.out.println("- - - - - - - - - - -\n");
+        }
         
         int number_of_movements = 0;
         while(Play() == true)
@@ -51,13 +60,6 @@ public final class Game
         }
         System.out.println("Ilosc ruchow = "+number_of_movements);
         
-        
-        
-//        DownPawnOnBoard(players.get(0).GetPawns().get(0));
-//        DownPawnOnBoard(players.get(0).GetPawns().get(1));
-//        
-//        DownPawnOnBoard(players.get(1).GetPawns().get(0));
-//        DownPawnOnBoard(players.get(1).GetPawns().get(1));
     }
     
     public boolean Play()
@@ -110,7 +112,7 @@ public final class Game
         for(int i=0;i<PLAYERS_QUANTITY; ++i)
         {
             // losowane jest UID od 1 do ...
-            players.add(new Player(uniqueID.nextInt(98/*Integer.MAX_VALUE*/)+1));
+            players.add(new Player(uniqueID.nextInt(98/*Integer.MAX_VALUE-1*/)+1));
         }   
     }
     
