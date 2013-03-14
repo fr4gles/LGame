@@ -90,43 +90,23 @@ public class Player
                     x_pos = ix;
                     y_pos = iy;
                 
-                        goodPositions = 0;
-                        
-                        if(((x_pos == tmpx) && (y_pos == tmpy)) && (c == tmpc))
-                            continue;
-                        
-//                        if( ((x_pos != tmpx) && (y_pos != tmpy)) && (c != tmpc))
-//                        {
-                            for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
-                            {
-                                if(i>-1 && i<4)
-                                {
-                                    for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
-                                    {
-                                        if(j>-1 && j<4)
-                                        {
-                                            if( (p.GetlistOfPawnConfigurations().get(c))[x][y] != 0 )
-                                            {
-                                                if(Game.board[i][j] == 0/*Game.board[i][j] != 0*/)
-                                                {
-                                                    ++goodPositions;
-//                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                    goodPositions = 0;
 
-//                                if(goodPositions > 0)
-//                                    break;
-                            }
+                    if(((x_pos == tmpx) && (y_pos == tmpy)) && (c == tmpc))
+                        continue;
 
-                            if(goodPositions == p.GetNumberOcOccupiedFields())
-                            {
-                                goodMove.add( new Position(ix, iy, c));
-                                System.out.println(goodMove.get(goodMove.size()-1));
-                            }
-//                        }
+                    for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
+                        if(i>-1 && i<4)
+                            for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
+                                if(j>-1 && j<4)
+                                    if( ((p.GetlistOfPawnConfigurations().get(c))[x][y] != 0) && (Game.board[i][j] == 0) )
+                                            ++goodPositions;
+
+                    if(goodPositions == p.GetNumberOcOccupiedFields())
+                    {
+                        goodMove.add( new Position(ix, iy, c));
+                        System.out.println(goodMove.get(goodMove.size()-1));
+                    }
                 }
             }
         }
