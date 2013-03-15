@@ -62,6 +62,8 @@ public class Player
             UpPawnFromBoard(pawnsList.get(currentPawn));
             SearchPlaceForPawn(pawnsList.get(currentPawn));
             DownPawnOnBoard(pawnsList.get(currentPawn));
+            
+            ++Game.number_of_movements;
         }
         
         if(Game.TEST)
@@ -173,16 +175,6 @@ public class Player
     public List<Pawn> GetPawns()
     {
         return pawnsList;
-    }
-    
-    public void ResetIsMoved()
-    {
-        moved = false;
-    }
-    
-    public boolean IsMoved()
-    {
-        return moved;
     }
 }
 /*******************************************************************/
