@@ -4,9 +4,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-
 /**
- *
  * @author Michal Franczyk
  * @date 13.03.2013
  */
@@ -14,14 +12,14 @@ public final class Game
 {
 //  publiczne 
     public final static boolean TEST = false;           // true - wypisuje dane dodatkowe, false - nie wypisuje
-    public final static int     BOARD_SIZE = 4;
-    public final static int     PLAYERS_QUANTITY = 2;
-    public final static int     PAWNS_QUANTITY = 2;
+    public final static int     BOARD_SIZE = 4;         // wielkość planszy
+    public final static int     PLAYERS_QUANTITY = 2;   // ilość graczy
+    public final static int     PAWNS_QUANTITY = 2;     // ilość pionków przypadająca na gracza
     public static int[][]       board;                  // plansza 4x4
     public static int           number_of_movements;    // ilość ruchów
     
 //  prywatne      
-    private List<Player>        players;
+    private List<Player>        players;                // lista graczy
     
 
     /**
