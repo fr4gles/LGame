@@ -9,26 +9,29 @@ import java.util.Random;
  */
 public class Player 
 {
-    public static final int NUMBER_OF_L_SHAPE_FLIP_POSIBILITIES = 2;
-    public static final int NUMBER_OF_L_SHAPE_ROTATE_POSIBILITIES = 4;
+    public static final int NUMBER_OF_L_SHAPE_FLIP_POSIBILITIES     = 2;
+    public static final int NUMBER_OF_L_SHAPE_ROTATE_POSIBILITIES   = 4;
     
     public static final int NUMBER_OF_DOT_SHAPE_ROTATE_POSIBILITIES = 0;
-    public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES = 0;
+    public static final int NUMBER_OF_DOT_SHAPE_FLIP_POSIBILITIES   = 0;
     
     
-    private List<Pawn> pawnsList;
-    private int currentPawn;
-    private boolean moved;
+    private List<Pawn>      pawnsList;
+    private int             currentPawn;
+    private boolean         moved;
     
-    final public int _id;
-    
+    final public int        _id;
     
     public Player(int id)
     {
-        pawnsList = new ArrayList<>();
+        pawnsList   = new ArrayList<>();
+
+        _id         = id;
+        currentPawn = 0;
+        moved       = false;
 
         pawnsList.add(new LShapePawn(id));
-        pawnsList.add(new DotShapePawn(id+1));
+        pawnsList.add(new DotShapePawn(id));
         
         if(Game.TEST)
         {
@@ -37,17 +40,13 @@ public class Player
             pawnsList.get(1).PrintAllConfigurations();
             System.out.println("- - - - - - - - - - -\n");
         }
-
-        _id = id;
-        currentPawn = 0;
-        moved = false;
     }
     
     public void go()
     {
-        currentPawn=0;
+        currentPawn = 0;
         
-        moved = false;
+        moved       = false;
         
         UpPawnFromBoard(pawnsList.get(currentPawn));
         if( SearchPlaceForPawn(pawnsList.get(currentPawn)) )
@@ -77,43 +76,37 @@ public class Player
         // aktualizacja position
         // jeśli brak powodzenia - revert
         
-        int goodPositions = 0;
-        
-        int x_pos = 0;
-        int y_pos = 0;
-        
-        int tmpx = p.GetPosition().x;
-        int tmpy = p.GetPosition().y;
-        int tmpc = p.GetPosition().conf;
+        int goodPositions               = 0,
+            tmpX                        = p.GetPosition().x,
+            tmpY                        = p.GetPosition().y,
+            tmpC                        = p.GetPosition().conf,
+            tmpNumberOfOccupiedFields   = p.GetNumberOfOccupiedFields(),
+            tempConfiguration[][];
         
         List<Position> goodMove = new ArrayList<>();
         
-        int examinedConf[][];
         for(int c = 0; c < p.GetAmoutOfRotatePosibilities(); ++c)
         {
-            examinedConf = p.GetlistOfPawnConfigurations().get(c);
-            for(int ix = 0; ix < Game.BOARD_SIZE; ++ix)
+            tempConfiguration = p.GetListOfPawnConfigurations().get(c);
+            for(int xpos = 0; xpos < Game.BOARD_SIZE; ++xpos)
             {
-                for(int iy = 0; iy < Game.BOARD_SIZE; ++iy)
+                for(int ypos = 0; ypos < Game.BOARD_SIZE; ++ypos)
                 {
-                    x_pos = ix;
-                    y_pos = iy;
-                
                     goodPositions = 0;
 
-                    if(((x_pos == tmpx) && (y_pos == tmpy)) && (c == tmpc))
+                    if( ( (xpos == tmpX) && (ypos == tmpY) ) && (c == tmpC) )
                         continue;
 
-                    for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
+                    for(int i = xpos - 1, x = 0; i < xpos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
                         if(i>-1 && i<4)
-                            for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
+                            for(int j = ypos - 1, y=0; j < ypos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
                                 if(j>-1 && j<4)
-                                    if( (examinedConf[x][y] != 0) && (Game.board[i][j] == 0) )
+                                    if( (tempConfiguration[x][y] != 0) && (Game.board[i][j] == 0) )
                                             ++goodPositions;
 
-                    if(goodPositions == p.GetNumberOcOccupiedFields())
+                    if(goodPositions == tmpNumberOfOccupiedFields)
                     {
-                        goodMove.add( new Position(ix, iy, c));
+                        goodMove.add( new Position(xpos, ypos, c));
                         if(Game.TEST)
                             System.out.println(goodMove.get(goodMove.size()-1));
                     }
@@ -144,52 +137,32 @@ public class Player
     
     public void UpPawnFromBoard(Pawn p)
     {
-        int x_pos = p.GetPosition().x;
-        int y_pos = p.GetPosition().y;
-        int conf  = p.GetPosition().conf;
-        
+        int x_pos                   = p.GetPosition().x,
+            y_pos                   = p.GetPosition().y,
+            tempConfiguration[][]   = p.GetListOfPawnConfigurations().get(p.GetPosition().conf),
+            tempID                  = p.GetID();
+ 
         for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
-        {
             if(i>-1 && i<4)
-            {
                 for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
-                {
                     if(j>-1 && j<4)
-                    {
-                        if( (p.GetlistOfPawnConfigurations().get(conf))[x][y] == p.GetID())
-                        {
+                        if( tempConfiguration[x][y] == tempID)
                             Game.board[i][j] =  0;
-                        }
-                    }
-                }
-            }
-        }
     }
     
-    public void DownPawnOnBoard(Pawn p)
+    public static void DownPawnOnBoard(Pawn p)
     {
-        int x_pos = p.GetPosition().x;
-        int y_pos = p.GetPosition().y;
-        int conf  = p.GetPosition().conf;
+        int x_pos                   = p.GetPosition().x,
+            y_pos                   = p.GetPosition().y,
+            tempConfiguration[][]   = p.GetListOfPawnConfigurations().get(p.GetPosition().conf);
         
         for(int i = x_pos - 1, x = 0; i < x_pos + 2 && x < Pawn.SMALL_BOARD_SIZE; ++i, ++x)
-        {
             if(i>-1 && i<4)
-            {
                 for(int j = y_pos - 1, y=0; j < y_pos + 2 && y < Pawn.SMALL_BOARD_SIZE; ++j, ++y)
-                {
                     if(j>-1 && j<4)
-                    {
-                        if( (p.GetlistOfPawnConfigurations().get(conf))[x][y] != 0)
-                        {
-                            Game.board[i][j] =  (p.GetlistOfPawnConfigurations().get(conf))[x][y];
-                        }
-                    }
-                }
-            }
-        }
+                        if( tempConfiguration[x][y] != 0)
+                            Game.board[i][j] =  tempConfiguration[x][y];
     }
-    
 
     
     public void SetPawns(List<Pawn> list)
@@ -262,7 +235,7 @@ abstract class Pawn
     
     protected Position      position;
     
-    protected int numberOfOccupiedFields;
+    protected int           numberOfOccupiedFields;
     
     public Pawn(int id)
     {
@@ -376,7 +349,7 @@ abstract class Pawn
         return this.listOfPawnConfigurations.get(index);
     }
     
-    public List<int[][]> GetlistOfPawnConfigurations()
+    public List<int[][]> GetListOfPawnConfigurations()
     {
         return this.listOfPawnConfigurations;
     }
@@ -388,7 +361,7 @@ abstract class Pawn
         return _id;
     }
     
-    public int GetNumberOcOccupiedFields()
+    public int GetNumberOfOccupiedFields()
     {
         return numberOfOccupiedFields;
     }
@@ -401,7 +374,7 @@ class DotShapePawn extends Pawn
 {
     public DotShapePawn(int id)
     {
-        super(id);
+        super(id+1);
         numberOfOccupiedFields = 1;
     }
     
@@ -411,7 +384,7 @@ class DotShapePawn extends Pawn
         // wprowadzenie początkowych danych, dot shape
         listOfPawnConfigurations.get(position.conf)[1][1] = id;
         
-        // tutaj nie jest potrzebne obrananie
+        // tutaj nie jest potrzebne obracaanie
         // zatem nie m sensu generowac możliwych pozycji
         try
         {
