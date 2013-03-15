@@ -113,10 +113,10 @@ public final class Game
     {
         // dodanie pozycji oraz konfiguracji
         players.get(0).GetPawns().get(0).SetPosition(new Position(2,2,0));
-        players.get(0).GetPawns().get(1).SetPosition(new Position(3,0,0));
+        players.get(0).GetPawns().get(1).SetPosition(new Position(0,3,0));
         
         players.get(1).GetPawns().get(0).SetPosition(new Position(1,1,2));
-        players.get(1).GetPawns().get(1).SetPosition(new Position(0,3,0));
+        players.get(1).GetPawns().get(1).SetPosition(new Position(3,0,0));
         
         // położenie pionków na planszę
         Player.DownPawnOnBoard(players.get(0).GetPawns().get(0));

@@ -125,7 +125,7 @@ public class Player
 
                     // teraz główna częśc algorytmu:
                     // Założenia: środek macierzy 3x3 jest w pkt 1,1
-                    //          : środek macierzy jest punktem "odłowania" względem którego będzie sprawdzana możliwość położenia pionka
+                    //          : środek macierzy jest punktem "odwołania" względem którego będzie sprawdzana możliwość położenia pionka
                     //          : w planszy oraz w macierzy konfiguracji: 0 - puste, numer -> zajęte pole
                     //
                     // Zmienne  : x, y - zmienne określające obecnie sprawdzany punkt w macierzach konfiguracji (możliwości ułożenia pionków), macierz ma wielkość 3x3
