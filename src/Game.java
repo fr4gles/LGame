@@ -8,6 +8,10 @@ import java.util.Random;
  * @author Michal Franczyk
  * @date 13.03.2013
  */
+
+/**
+ * Klasa Gry
+ */
 public final class Game 
 {
 //  publiczne 
